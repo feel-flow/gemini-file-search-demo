@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { GoogleGenAI } from '@google/genai';
 import './App.css';
 
+// 使用するGeminiモデルの定数
+const MODEL_NAME = 'gemini-2.5-flash';
+
 function App() {
   // localStorageからAPIキーを読み込む
   const [apiKey, setApiKey] = useState(() => {
@@ -14,13 +17,17 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
   const [error, setError] = useState('');
+  const [ai, setAi] = useState(null);
 
-  // APIキーが変更されたときにlocalStorageに保存
+  // APIキーが変更されたときにlocalStorageに保存し、GoogleGenAIインスタンスを生成
   useEffect(() => {
     if (apiKey) {
       localStorage.setItem('gemini_api_key', apiKey);
+      const genAI = new GoogleGenAI({ apiKey });
+      setAi(genAI);
     } else {
       localStorage.removeItem('gemini_api_key');
+      setAi(null);
     }
   }, [apiKey]);
 
@@ -68,7 +75,7 @@ function App() {
 
   // 質問処理
   const handleQuery = async () => {
-    if (!apiKey || !uploadedFile || !query) {
+    if (!ai || !uploadedFile || !query) {
       setError('ファイルをアップロードし、質問を入力してください');
       return;
     }
@@ -77,10 +84,8 @@ function App() {
     setError('');
 
     try {
-      const ai = new GoogleGenAI({ apiKey });
-
       const result = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: MODEL_NAME,
         contents: [
           {
             role: 'user',
@@ -154,9 +159,9 @@ function App() {
             className="textarea-field"
             rows="4"
           />
-          <button 
-            onClick={handleQuery} 
-            disabled={loading || !uploadedFile || !query}
+          <button
+            onClick={handleQuery}
+            disabled={loading || !ai || !uploadedFile || !query}
             className="button"
           >
             質問する
