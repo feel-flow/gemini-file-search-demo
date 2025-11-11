@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenAI } from '@google/genai';
 import './App.css';
 
 function App() {
@@ -35,8 +35,6 @@ function App() {
     setError('');
 
     try {
-      const genAI = new GoogleGenerativeAI(apiKey);
-      
       // ファイルを読み込む
       const reader = new FileReader();
       reader.onload = async (e) => {
@@ -79,15 +77,22 @@ function App() {
     setError('');
 
     try {
-      const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+      const ai = new GoogleGenAI({ apiKey });
 
-      const result = await model.generateContent([
-        query,
-        uploadedFile.data
-      ]);
+      const result = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: [
+          {
+            role: 'user',
+            parts: [
+              { text: query },
+              uploadedFile.data
+            ]
+          }
+        ]
+      });
 
-      const text = result.response.text();
+      const text = result.text;
       setResponse(text);
       setLoading(false);
     } catch (err) {

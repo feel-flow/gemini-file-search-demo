@@ -55,8 +55,10 @@ npm start
 ## 技術スタック
 
 - **フロントエンド**: React 18
-- **AI SDK**: @google/generative-ai
+- **AI SDK**: @google/genai (Google GenAI SDK v1.29.0)
 - **モデル**: gemini-2.5-flash
+
+> **注意**: 旧SDK `@google/generative-ai` は2025年8月31日にサポート終了となるため、新しい `@google/genai` を使用しています。
 
 ## プロジェクト構成
 
