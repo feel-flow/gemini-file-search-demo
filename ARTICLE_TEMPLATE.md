@@ -38,8 +38,10 @@ Google が発表した Gemini API の新機能「File Search」について、�
 本検証では以下の技術を使用しました。
 
 - **フロントエンド**: React 18
-- **AI SDK**: @google/generative-ai (Google公式SDK)
-- **AIモデル**: gemini-1.5-flash
+- **AI SDK**: @google/genai (Google GenAI SDK v1.29.0)
+- **AIモデル**: gemini-2.5-flash
+
+> **重要**: 本デモは新しい `@google/genai` SDK を使用しています。旧SDK `@google/generative-ai` は2025年8月31日にサポート終了となるため、新規プロジェクトでは新しいSDKを使用することを推奨します。
 
 ### 2. アーキテクチャ
 
